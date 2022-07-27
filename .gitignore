@@ -7,4 +7,5 @@
 *.png
 *.tar
 *.csv
+*.txt
 events.out.*
