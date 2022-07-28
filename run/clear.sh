@@ -16,27 +16,32 @@ else
 fi
 
 # Remove previous annotations
-if [ -d ./output/ALT.OD ];then
-    rm ./output/ALT.OD/*
+if [ -d /svdetectron2/detectron2/output/ALT.OD ];then
+    rm /svdetectron2/detectron2/output/ALT.OD/*
 else
-    mkdir ./output/ALT.OD
+    mkdir /svdetectron2/detectron2/output/ALT.OD
 fi
-if [ -d ./output/ALT.SOD ];then
-    rm ./output/ALT.SOD/*
+if [ -d /svdetectron2/detectron2/output/ALT.SOD ];then
+    rm /svdetectron2/detectron2/output/ALT.SOD/*
 else
-    mkdir ./output/ALT.SOD
+    mkdir /svdetectron2/detectron2/output/ALT.SOD
 fi
-if [ -d ./output/ALT.TSTLD ];then
-    rm ./output/ALT.TSTLD/*
+if [ -d /svdetectron2/detectron2/output/ALT.TSTLD ];then
+    rm /svdetectron2/detectron2/output/ALT.TSTLD/*
 else
-    mkdir ./output/ALT.TSTLD
+    mkdir /svdetectron2/detectron2/output/ALT.TSTLD
+fi
+if [ -d /svdetectron2/detectron2/output/ALT.OUT_IMG ];then
+    rm /svdetectron2/detectron2/output/ALT.OUT_IMG/*
+else
+    mkdir /svdetectron2/detectron2/output/ALT.OUT_IMG
 fi
 
 # Remove previous sampling output
-if [ -d ./cluster_output ];then
-    rm ./cluster_output/*
-    if [ -d ./cluster_output/cluster_show ];then
-        rm ./cluster_output/cluster_show/*
+if [ -d /scan/cluster_output ];then
+    rm /scan/cluster_output/*
+    if [ -d /scan/cluster_output/cluster_show ];then
+        rm /scan/cluster_output/cluster_show/*
     fi
 fi
 
