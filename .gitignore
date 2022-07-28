@@ -5,7 +5,6 @@
 *.AVI
 *.PNG
 *.png
-*.tar
 *.csv
 *.txt
 events.out.*
