@@ -1,0 +1,71 @@
+MODEL:
+  META_ARCHITECTURE: "GeneralizedRCNN"
+  BACKBONE:
+    NAME: "build_retinanet_efficientnet_bifpn_backbone"
+  WEIGHTS: "weights/efficientnet/b7_detectron2.pth"
+  EfficientNet:
+    VERSION: 7
+    NORM: 'SyncBN'
+    FREEZE_AT: -1
+  FPN:
+    # IN_FEATURES: ["res2", "res3", "res4", "res5"]
+    IN_FEATURES: ["stride-8", "stride-16", "stride-32"]
+    IN_FEATURE_P6P7: 'stride-32'
+    OUT_CHANNELS: 384
+    REPEAT: 8
+    NORM: 'SyncBN'
+  ANCHOR_GENERATOR:
+    SIZES: [[16, 32], [48, 64], [96, 128], [192, 256], [384, 512]]  # One size for each in feature map
+    # SIZES: [[32], [64], [128], [256], [512]]  # One size for each in feature map
+    ASPECT_RATIOS: [[0.5, 1.0, 2.0]]  # Three aspect ratios (same for all in feature maps)
+  RPN:
+    # IN_FEATURES: ["p2", "p3", "p4", "p5", "p6"]
+    IN_FEATURES: ["p3", "p4", "p5", "p6", "p7"]
+    MULTILEVEL_RPN: False
+    PRE_NMS_TOPK_TRAIN: 2000  # Per FPN level
+    PRE_NMS_TOPK_TEST: 1000  # Per FPN level
+    # Detectron1 uses 2000 proposals per-batch,
+    # (See "modeling/rpn/rpn_outputs.py" for details of this legacy issue)
+    # which is approximately 1000 proposals per-image since the default batch size for FPN is 2.
+    POST_NMS_TOPK_TRAIN: 1000
+    POST_NMS_TOPK_TEST: 1000
+  ROI_HEADS:
+    NAME: "StandardROIHeads"
+    # SCORE_THRESH_TEST: 0.7
+    # IN_FEATURES: ["p2", "p3", "p4", "p5"]
+    IN_FEATURES: ["p3", "p4", "p5", "p6"]
+    NUM_CLASSES: 19
+    # NUM_SUPERCLASSES: 5
+    SUPERCLASS_MAP: (0, 0, 1, 1, 1, 2, 2, 2, 3, 4)  # ped_rider(0), car_truck_bus(1), ts(2), tl(3), ignored(4)
+  ROI_BOX_HEAD:
+    NAME: "FastRCNNConvFCHead"
+    NUM_FC: 2
+    POOLER_RESOLUTION: 7
+    USE_DIRICHLET_LOSS: False
+    DIRICHLET_LOSS_LAMBDA: 0.0
+  ROI_MASK_HEAD:
+    NAME: "MaskRCNNConvUpsampleHead"
+    NUM_CONV: 4
+    POOLER_RESOLUTION: 14
+  IGNORED_CLASS_INDEX: 19  # from index zero 
+DATASETS:  
+  TRAIN: ("udb_200929", "udb_public_bdd100k_train", "udb_public_bdd100k_val", "udb_public_cityscape", "udb_public_udacity")
+  TEST: ("udb_test_200225", "udb_test_191204_mobis", "udb_test_svnetr1_zf")  
+SOLVER:
+  IMS_PER_BATCH: 8  #16
+  BASE_LR: 0.02
+  # BASE_LR: 0.004
+  STEPS: (65000, 3740000, 3860000)
+  MAX_ITER: 3900000
+INPUT:
+  # MIN_SIZE_TRAIN: (640, 672, 704, 736, 768, 800)
+  # MIN_SIZE_TRAIN: (560, 592, 624, 656, 688, 720, 752, 784, 816, 848, 880)
+  MIN_SIZE_TRAIN: (360, 405, 450, 495, 540, 585, 630, 675, 720, 765, 810)
+  MAX_SIZE_TRAIN: 1440
+  MIN_SIZE_TEST: 720
+  MAX_SIZE_TEST: 1280
+TEST:
+  AUG:
+    ENABLED: False     
+    MIN_SIZES: (360, 405, 450, 495, 540, 585, 630, 675, 720, 765, 810, 900, 1000, 1100, 1200) 
+VERSION: 2

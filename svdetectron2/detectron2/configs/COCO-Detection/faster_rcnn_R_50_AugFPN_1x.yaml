@@ -1,0 +1,19 @@
+_BASE_: "../Base-RCNN-AugFPN.yaml"
+MODEL:
+  WEIGHTS: "detectron2://ImageNetPretrained/MSRA/R-50.pkl"
+  MASK_ON: False
+  RESNETS:
+    DEPTH: 50
+  BACKBONE:
+    FREEZE_AT: 0
+  IGNORED_CLASS_INDEX: 9  # from index zero 
+SOLVER:
+  STEPS: (220000, 260000)
+  MAX_ITER: 280000
+  BASE_LR: 0.004
+  IMS_PER_BATCH: 27
+INPUT:
+  MIN_SIZE_TRAIN: (360,)
+  MAX_SIZE_TRAIN: 640
+  MIN_SIZE_TEST: 360
+  MAX_SIZE_TEST: 640

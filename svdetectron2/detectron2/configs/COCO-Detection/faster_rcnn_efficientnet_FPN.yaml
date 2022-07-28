@@ -1,0 +1,4 @@
+_BASE_: "../EfficientDet_D0.yaml"
+MODEL:
+  # WEIGHTS: "detectron2://ImageNetPretrained/MSRA/R-50.pkl"
+  MASK_ON: False

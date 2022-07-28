@@ -1,0 +1,58 @@
+_BASE_: "../Base-RCNN-FPN.yaml"
+MODEL:
+  MASK_ON: False
+  # WEIGHTS: "weights/e2e_mask_rcnn_X-152-32x8d-FPN-IN5k_1.44x.pkl"
+  WEIGHTS: "weights/model_0294999.pth"
+  # WEIGHTS: "weights/model_1359999.pth"
+  PIXEL_STD: [57.375, 57.120, 58.395]
+  RESNETS:
+    STRIDE_IN_1X1: False  # this is a C2 model
+    NUM_GROUPS: 32
+    WIDTH_PER_GROUP: 8
+    DEPTH: 152
+  BACKBONE:
+    FREEZE_AT: 0
+  USE_3DCAR: False
+  OPT_3DCAR:
+    NUM_DIRECTIONS: 9
+    NUM_SHAPES: 5
+    NUM_POINTS: 16
+  # ROI_HEADS:
+  #   SCORE_THRESH_TEST: 0.5 # 0.05
+INPUT:
+  MAX_SIZE_TEST: 1280
+  MIN_SIZE_TEST: 720
+SOLVER:
+  # STEPS: (210000, 250000)
+  # MAX_ITER: 270000
+  # STEPS: (0, 70000, 80000)
+  # MAX_ITER: 90000
+  # STEPS: (0, 250000, 290000)
+  # MAX_ITER: 310000
+  # STEPS: (0, 10000, 20000, 60000)  # about 50 epochs  3d car
+  # MAX_ITER: 80000
+  STEPS: (55000, 190000, 230000)  # about 50 epochs  dcr
+  MAX_ITER: 1000000
+  # BASE_LR: 0.004
+  BASE_LR: 0.01 # cur
+  IMS_PER_BATCH: 21 #256
+DATALOADER:
+  NUM_WORKERS: 8
+  # SAMPLER_TRAIN: "RepeatFactorTrainingSampler"
+#   REPEAT_THRESHOLD: 0.001
+DATASETS:
+  # TRAIN: ("udb2_GODTrainNew3D190827_untar",)
+  # TRAIN: ("udb_200225",)
+  TEST: ("udb_skt", "udb_gopro", "udb_gopro_kor", "udb_harman", "udb_hondari", "udb_movon_ger_od_tstld", "udb_movon_kor", "udb_movon_usa", "udb_youtube", "udb_200225")
+  TEST: ("udb_hondari", "udb_movon_ger_od_tstld", "udb_movon_kor", "udb_movon_usa", "udb_youtube", "udb_200225")  
+  # TRAIN: ("udb_200225",)
+# INPUT:
+#   MIN_SIZE_TRAIN: (720,)
+TEST:
+  AUG:
+    ENABLED: False
+    MIN_SIZES: (400, 500, 600, 640, 672, 700, 704, 736, 768, 800, 900, 1000, 1100, 1200)
+    # MIN_SIZES: (640, 672, 704, 736, 768, 800)
+    # (640, 672, 704, 736, 768, 800)
+    # MAX_SIZE: 4000   
+OUTPUT_DIR: "./output/output_3dcar"
